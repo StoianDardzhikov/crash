@@ -32,9 +32,10 @@
     /* Canvas for crash animation */
     #gameCanvas {
       width: 100%;
-      height: 70%;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
+      height: 75%;
+      background: linear-gradient(180deg, #0a0a1a 0%, #0d1025 100%);
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(0, 255, 136, 0.03);
     }
 
     /* Multiplier display */
@@ -117,6 +118,17 @@
     .history-item.high {
       background: rgba(0, 255, 136, 0.3);
       color: #00ff88;
+    }
+
+    .history-item.epic {
+      background: linear-gradient(135deg, rgba(255, 0, 255, 0.4), rgba(0, 255, 255, 0.4));
+      color: #ff00ff;
+      animation: epicPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes epicPulse {
+      0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.5); }
+      50% { box-shadow: 0 0 15px rgba(255, 0, 255, 0.8); }
     }
 
     /* Connection status */
