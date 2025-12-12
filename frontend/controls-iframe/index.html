@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Controls</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .controls-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Balance display */
+    .balance-display {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .balance-label {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .balance-amount {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00ff88;
+    }
+
+    /* Bet controls */
+    .bet-controls {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-label {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .bet-input-wrapper {
+      display: flex;
+      gap: 10px;
+    }
+
+    .bet-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 12px 15px;
+      color: #fff;
+      font-size: 1.2rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .bet-input:focus {
+      border-color: #00ff88;
+    }
+
+    .bet-input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Quick bet buttons */
+    .quick-bets {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .quick-bet-btn {
+      flex: 1;
+      min-width: 60px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #aaa;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-bet-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .quick-bet-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Main action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-bet {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+      color: #000;
+    }
+
+    .btn-bet:hover:not(:disabled) {
+      transform: scale(1.02);
+      box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+    }
+
+    .btn-cashout {
+      background: linear-gradient(135deg, #ff8800 0%, #ff6600 100%);
+      color: #fff;
+      display: none;
+    }
+
+    .btn-cashout:hover:not(:disabled) {
+      transform: scale(1.02);
+      box-shadow: 0 5px 20px rgba(255, 136, 0, 0.4);
+    }
+
+    .btn-cashout.active {
+      display: block;
+    }
+
+    .btn-bet.hidden {
+      display: none;
+    }
+
+    /* Cashout amount display */
+    .cashout-amount {
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    /* Status messages */
+    .status-message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .status-message.success {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+    }
+
+    .status-message.error {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+    }
+
+    .status-message.info {
+      background: rgba(255, 170, 0, 0.2);
+      color: #ffaa00;
+    }
+
+    /* Current bet info */
+    .current-bet-info {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .current-bet-info.visible {
+      display: block;
+    }
+
+    .current-bet-info .label {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .current-bet-info .value {
+      font-size: 1rem;
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    /* Round status */
+    .round-status {
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .round-status.betting {
+      background: rgba(255, 170, 0, 0.2);
+      color: #ffaa00;
+    }
+
+    .round-status.running {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+    }
+
+    .round-status.crashed {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+    }
+
+    /* Connection indicator */
+    .connection-indicator {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .connection-indicator.connected {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+    }
+
+    .connection-indicator.disconnected {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+    }
+  </style>
+</head>
+<body>
+  <div class="connection-indicator disconnected" id="connectionIndicator">DISCONNECTED</div>
+
+  <div class="controls-container">
+    <!-- Balance display -->
+    <div class="balance-display">
+      <div class="balance-label">Balance</div>
+      <div class="balance-amount" id="balance">0.00 EUR</div>
+    </div>
+
+    <!-- Bet controls -->
+    <div class="bet-controls">
+      <!-- Round status -->
+      <div class="round-status" id="roundStatus">Connecting...</div>
+
+      <!-- Current bet info -->
+      <div class="current-bet-info" id="currentBetInfo">
+        <div class="label">Your Bet</div>
+        <div class="value" id="currentBetAmount">0.00</div>
+        <div class="cashout-amount" id="potentialWin">Potential: 0.00</div>
+      </div>
+
+      <!-- Bet amount input -->
+      <div class="input-group">
+        <label class="input-label">Bet Amount</label>
+        <div class="bet-input-wrapper">
+          <input type="number" class="bet-input" id="betAmount"
+                 placeholder="0.00" min="0.10" step="0.10" value="1.00">
+        </div>
+      </div>
+
+      <!-- Quick bet buttons -->
+      <div class="quick-bets">
+        <button class="quick-bet-btn" data-action="half">½</button>
+        <button class="quick-bet-btn" data-action="double">2×</button>
+        <button class="quick-bet-btn" data-amount="1">1</button>
+        <button class="quick-bet-btn" data-amount="5">5</button>
+        <button class="quick-bet-btn" data-amount="10">10</button>
+        <button class="quick-bet-btn" data-amount="max">MAX</button>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-bet" id="betBtn">Place Bet</button>
+        <button class="btn btn-cashout" id="cashoutBtn">Cashout</button>
+      </div>
+
+      <!-- Status message -->
+      <div class="status-message" id="statusMessage" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/controls-iframe/controls.js"></script>
+</body>
+</html>

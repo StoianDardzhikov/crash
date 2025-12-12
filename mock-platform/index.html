@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Casino Platform - Crash Game Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a1a;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a1a3e 0%, #0d0d2b 100%);
+      padding: 20px;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00ff88;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .balance-display {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .balance-label {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .balance-amount {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #00ff88;
+    }
+
+    .main-container {
+      display: flex;
+      height: calc(100vh - 80px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: #111;
+      padding: 20px;
+      border-right: 1px solid #333;
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    .user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .user-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .user-card:hover {
+      border-color: #00ff88;
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .user-card.selected {
+      border-color: #00ff88;
+      background: rgba(0, 255, 136, 0.15);
+    }
+
+    .user-card .username {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .user-card .user-balance {
+      color: #00ff88;
+      font-size: 0.9rem;
+    }
+
+    .deposit-section {
+      margin-top: 20px;
+    }
+
+    .deposit-section input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 10px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.02);
+      box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Game container */
+    .game-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #0d0d1a;
+    }
+
+    .game-header {
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .game-title {
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .session-info {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .iframes-container {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .iframe-wrapper {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #333;
+      background: #000;
+    }
+
+    .iframe-wrapper.game {
+      flex: 2;
+      min-height: 400px;
+    }
+
+    .iframe-wrapper.controls {
+      flex: 1;
+      min-width: 320px;
+      max-width: 400px;
+    }
+
+    .iframe-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .no-game {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+    }
+
+    .no-game-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .no-game h2 {
+      margin-bottom: 10px;
+      color: #888;
+    }
+
+    .no-game p {
+      margin-bottom: 30px;
+    }
+
+    .launch-btn {
+      padding: 15px 40px;
+      font-size: 1.1rem;
+    }
+
+    /* Transactions panel */
+    .transactions-panel {
+      width: 300px;
+      background: #111;
+      border-left: 1px solid #333;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .transactions-panel h3 {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .transaction-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .transaction-item .tx-type {
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .transaction-item .tx-type.BET {
+      color: #ff6666;
+    }
+
+    .transaction-item .tx-type.WIN {
+      color: #00ff88;
+    }
+
+    .transaction-item .tx-type.ROLLBACK {
+      color: #ffaa00;
+    }
+
+    .transaction-item .tx-type.DEPOSIT {
+      color: #00aaff;
+    }
+
+    .transaction-item .tx-amount {
+      color: #aaa;
+    }
+
+    .transaction-item .tx-time {
+      color: #666;
+      font-size: 0.75rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .transactions-panel {
+        display: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">🎰 Mock Casino Platform</div>
+    <div class="user-info">
+      <div class="balance-display" id="headerBalance" style="display: none;">
+        <div class="balance-label">Current Balance</div>
+        <div class="balance-amount" id="headerBalanceAmount">0.00 EUR</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Sidebar: User Selection -->
+    <aside class="sidebar">
+      <h3>Select Player</h3>
+      <div class="user-list" id="userList">
+        <!-- Users loaded dynamically -->
+      </div>
+
+      <h3>Deposit Funds</h3>
+      <div class="deposit-section">
+        <input type="number" id="depositAmount" placeholder="Amount" min="1" step="1" value="100">
+        <button class="btn btn-secondary" id="depositBtn" disabled>Deposit</button>
+      </div>
+    </aside>
+
+    <!-- Main Game Area -->
+    <main class="game-container">
+      <div class="game-header" id="gameHeader" style="display: none;">
+        <span class="game-title">Crash Game</span>
+        <span class="session-info" id="sessionInfo">Session: -</span>
+      </div>
+
+      <!-- No game state -->
+      <div class="no-game" id="noGameState">
+        <div class="no-game-icon">🎮</div>
+        <h2>Ready to Play?</h2>
+        <p>Select a player from the sidebar and launch the game</p>
+        <button class="btn btn-primary launch-btn" id="launchBtn" disabled>Launch Game</button>
+      </div>
+
+      <!-- Game iframes -->
+      <div class="iframes-container" id="iframesContainer" style="display: none;">
+        <div class="iframe-wrapper game">
+          <iframe id="gameIframe" title="Crash Game"></iframe>
+        </div>
+        <div class="iframe-wrapper controls">
+          <iframe id="controlsIframe" title="Game Controls"></iframe>
+        </div>
+      </div>
+    </main>
+
+    <!-- Transactions Panel -->
+    <aside class="transactions-panel">
+      <h3>Recent Transactions</h3>
+      <div class="transaction-list" id="transactionList">
+        <!-- Transactions loaded dynamically -->
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // State
+    let selectedUser = null;
+    let currentSession = null;
+
+    // DOM Elements
+    const userListEl = document.getElementById('userList');
+    const depositAmountEl = document.getElementById('depositAmount');
+    const depositBtn = document.getElementById('depositBtn');
+    const launchBtn = document.getElementById('launchBtn');
+    const noGameStateEl = document.getElementById('noGameState');
+    const iframesContainerEl = document.getElementById('iframesContainer');
+    const gameHeaderEl = document.getElementById('gameHeader');
+    const sessionInfoEl = document.getElementById('sessionInfo');
+    const gameIframeEl = document.getElementById('gameIframe');
+    const controlsIframeEl = document.getElementById('controlsIframe');
+    const headerBalanceEl = document.getElementById('headerBalance');
+    const headerBalanceAmountEl = document.getElementById('headerBalanceAmount');
+    const transactionListEl = document.getElementById('transactionList');
+
+    // Load users
+    async function loadUsers() {
+      const res = await fetch('/api/users');
+      const users = await res.json();
+
+      userListEl.innerHTML = users.map(user => `
+        <div class="user-card" data-id="${user.id}">
+          <div class="username">${user.username}</div>
+          <div class="user-balance">${user.balance.toFixed(2)} ${user.currency}</div>
+        </div>
+      `).join('');
+
+      // Add click handlers
+      document.querySelectorAll('.user-card').forEach(card => {
+        card.addEventListener('click', () => selectUser(card.dataset.id));
+      });
+    }
+
+    // Select user
+    async function selectUser(userId) {
+      const res = await fetch(`/api/users/${userId}`);
+      selectedUser = await res.json();
+
+      // Update UI
+      document.querySelectorAll('.user-card').forEach(card => {
+        card.classList.toggle('selected', card.dataset.id === userId);
+      });
+
+      depositBtn.disabled = false;
+      launchBtn.disabled = false;
+
+      headerBalanceEl.style.display = 'block';
+      updateHeaderBalance();
+
+      // Reload users to refresh balances
+      loadUsers();
+    }
+
+    // Update header balance
+    function updateHeaderBalance() {
+      if (selectedUser) {
+        headerBalanceAmountEl.textContent = `${selectedUser.balance.toFixed(2)} ${selectedUser.currency}`;
+      }
+    }
+
+    // Deposit funds
+    async function deposit() {
+      if (!selectedUser) return;
+
+      const amount = parseFloat(depositAmountEl.value);
+      if (isNaN(amount) || amount <= 0) return;
+
+      const res = await fetch(`/api/users/${selectedUser.id}/deposit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        selectedUser.balance = data.newBalance;
+        updateHeaderBalance();
+        loadUsers();
+        loadTransactions();
+      }
+    }
+
+    // Launch game
+    async function launchGame() {
+      if (!selectedUser) return;
+
+      launchBtn.disabled = true;
+      launchBtn.textContent = 'Launching...';
+
+      try {
+        const res = await fetch('/api/launch-game', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playerId: selectedUser.id })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        currentSession = data.sessionId;
+
+        // Show game iframes
+        noGameStateEl.style.display = 'none';
+        iframesContainerEl.style.display = 'flex';
+        gameHeaderEl.style.display = 'flex';
+
+        sessionInfoEl.textContent = `Session: ${currentSession.substring(0, 20)}...`;
+
+        // Load iframes
+        gameIframeEl.src = data.gameUrl;
+        controlsIframeEl.src = data.controlsUrl;
+
+        // Start polling for balance updates
+        startBalancePolling();
+
+      } catch (error) {
+        alert('Failed to launch game: ' + error.message);
+      } finally {
+        launchBtn.disabled = false;
+        launchBtn.textContent = 'Launch Game';
+      }
+    }
+
+    // Poll for balance updates
+    let balanceInterval = null;
+    function startBalancePolling() {
+      if (balanceInterval) clearInterval(balanceInterval);
+
+      balanceInterval = setInterval(async () => {
+        if (!selectedUser) return;
+
+        const res = await fetch(`/api/users/${selectedUser.id}`);
+        const user = await res.json();
+        selectedUser.balance = user.balance;
+        updateHeaderBalance();
+        loadUsers();
+        loadTransactions();
+      }, 2000);
+    }
+
+    // Load transactions
+    async function loadTransactions() {
+      const res = await fetch('/api/transactions?limit=20');
+      const txs = await res.json();
+
+      transactionListEl.innerHTML = txs.map(tx => `
+        <div class="transaction-item">
+          <div class="tx-type ${tx.type}">${tx.type}</div>
+          <div class="tx-amount">${tx.amount >= 0 ? '+' : ''}${tx.amount.toFixed(2)} EUR</div>
+          <div class="tx-time">${new Date(tx.timestamp).toLocaleTimeString()}</div>
+        </div>
+      `).join('');
+    }
+
+    // Event listeners
+    depositBtn.addEventListener('click', deposit);
+    launchBtn.addEventListener('click', launchGame);
+
+    // Initial load
+    loadUsers();
+    loadTransactions();
+
+    // Poll transactions
+    setInterval(loadTransactions, 3000);
+  </script>
+</body>
+</html>
