@@ -10,8 +10,8 @@ module.exports = {
     TICK_INTERVAL_MS: 50,           // Multiplier update interval
     ROUND_DELAY_MS: 3000,           // Delay between rounds
     BETTING_PHASE_MS: 5000,         // Time for players to place bets
-    MIN_BET: 0.10,
-    MAX_BET: 1000,
+    MIN_BET: 1,
+    MAX_BET: 100000000000,
     MAX_MULTIPLIER: 1000,           // Safety cap
   },
 
