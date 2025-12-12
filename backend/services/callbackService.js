@@ -16,6 +16,8 @@ class CallbackService {
    * Make HTTP request to platform
    */
   async makeRequest(url, payload, attempt = 1) {
+    console.log(url);
+    console.log(payload);
     const signature = generateCallbackSignature(config.PROVIDER_SECRET, payload);
 
     try {
@@ -29,7 +31,7 @@ class CallbackService {
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(config.CALLBACK.TIMEOUT_MS)
       });
-
+      console.log(response);
       const data = await response.json();
 
       if (!response.ok) {
@@ -106,7 +108,7 @@ class CallbackService {
     try {
       const response = await this.makeRequest(url, payload);
 
-      if (response.status === 'OK') {
+      if (response.transactionId !== undefined) {
         // Track transaction for potential rollback
         this.pendingTransactions.set(requestId, {
           type: 'bet',
@@ -187,7 +189,7 @@ class CallbackService {
     try {
       const response = await this.makeRequest(url, payload);
 
-      if (response.status === 'OK') {
+      if (response.transactionId !== undefined) {
         // Remove bet from pending since it's now settled
         this.clearPendingTransaction(betTransactionId);
 
@@ -322,20 +324,8 @@ class CallbackService {
 
     try {
       const response = await this.makeRequest(url, payload);
-
-      if (response.status === 'OK') {
-        return {
-          success: true,
-          balance: response.balance,
-          currency: response.currency
-        };
-      } else {
-        return {
-          success: false,
-          code: response.code,
-          message: response.message
-        };
-      }
+      response.success = true;
+      return response;
     } catch (error) {
       console.error(`[CallbackService] Balance callback failed:`, error.message);
       return {
