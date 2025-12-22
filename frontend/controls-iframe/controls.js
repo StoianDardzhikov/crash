@@ -69,6 +69,7 @@ class CrashControls {
 
     // Connect to controls namespace
     this.socket = io('/ws/controls', {
+      path: "/crash/socket.io/",    
       query: { sessionId: this.sessionId },
       transports: ['websocket', 'polling']
     });

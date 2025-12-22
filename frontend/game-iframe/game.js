@@ -82,6 +82,7 @@ class CrashGame {
 
     // Connect to game namespace
     this.socket = io('/ws/game', {
+      path: "/crash/socket.io/",
       query: { sessionId: this.sessionId },
       transports: ['websocket', 'polling']
     });
