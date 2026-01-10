@@ -16,21 +16,26 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
       color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .controls-container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      width: 100%;
     }
 
     /* Balance display */
     .balance-display {
       background: rgba(0, 0, 0, 0.4);
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
+      padding: 12px 20px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     .balance-label {
@@ -40,27 +45,34 @@
     }
 
     .balance-amount {
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       font-weight: bold;
       color: #00ff88;
+      white-space: nowrap;
     }
 
     /* Bet controls */
     .bet-controls {
       background: rgba(0, 0, 0, 0.4);
       border-radius: 10px;
-      padding: 20px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
     }
 
     .input-group {
-      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .input-label {
       font-size: 0.85rem;
       color: #888;
-      margin-bottom: 8px;
-      display: block;
+      white-space: nowrap;
     }
 
     .bet-input-wrapper {
@@ -69,13 +81,13 @@
     }
 
     .bet-input {
-      flex: 1;
+      width: 100px;
       background: rgba(255, 255, 255, 0.1);
       border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
-      padding: 12px 15px;
+      padding: 10px 12px;
       color: #fff;
-      font-size: 1.2rem;
+      font-size: 1rem;
       outline: none;
       transition: border-color 0.3s;
     }
@@ -92,22 +104,21 @@
     /* Quick bet buttons */
     .quick-bets {
       display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
+      gap: 6px;
+      flex-shrink: 0;
       flex-wrap: wrap;
     }
 
     .quick-bet-btn {
-      flex: 1;
-      min-width: 60px;
-      padding: 8px;
+      padding: 8px 12px;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 6px;
       color: #aaa;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .quick-bet-btn:hover {
@@ -124,18 +135,19 @@
     .action-buttons {
       display: flex;
       gap: 10px;
+      flex-shrink: 0;
     }
 
     .btn {
-      flex: 1;
-      padding: 15px;
+      padding: 12px 25px;
       border: none;
-      border-radius: 10px;
-      font-size: 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .btn:disabled {
@@ -180,11 +192,11 @@
 
     /* Status messages */
     .status-message {
-      margin-top: 15px;
-      padding: 10px;
+      padding: 8px 12px;
       border-radius: 6px;
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
 
     .status-message.success {
@@ -207,13 +219,15 @@
       background: rgba(0, 255, 136, 0.1);
       border: 1px solid rgba(0, 255, 136, 0.3);
       border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 8px 12px;
       display: none;
+      flex-shrink: 0;
     }
 
     .current-bet-info.visible {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .current-bet-info .label {
@@ -227,13 +241,19 @@
       font-weight: bold;
     }
 
+    /* Top row wrapper - invisible in horizontal, flex container in vertical */
+    .top-row {
+      display: contents;
+    }
+
     /* Round status */
     .round-status {
       text-align: center;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 8px 15px;
       border-radius: 6px;
       font-weight: bold;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .round-status.betting {
@@ -270,30 +290,252 @@
       background: rgba(255, 68, 68, 0.2);
       color: #ff4444;
     }
+
+    /* ============================================
+       VERTICAL LAYOUT (portrait / narrow width)
+       ============================================ */
+    @media (max-aspect-ratio: 1/1), (max-width: 600px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .controls-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 15px;
+        height: 100%;
+      }
+
+      /* Top row: status + balance side by side */
+      .top-row {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+      }
+
+      .round-status {
+        flex: 1;
+        padding: 10px 12px;
+      }
+
+      .balance-display {
+        flex: 1;
+        padding: 10px 15px;
+      }
+
+      .balance-amount {
+        font-size: 1.2rem;
+      }
+
+      /* Bet controls stack vertically */
+      .bet-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 15px;
+        flex: 0;
+      }
+
+      .input-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      .input-label {
+        text-align: center;
+      }
+
+      .bet-input {
+        width: 100%;
+        text-align: center;
+        font-size: 1.2rem;
+        padding: 12px;
+      }
+
+      /* Quick bets as a grid */
+      .quick-bets {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .quick-bet-btn {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      /* Current bet info */
+      .current-bet-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+      }
+
+      .current-bet-info.visible {
+        flex-direction: column;
+      }
+
+      /* Action button full width */
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 1.1rem;
+      }
+
+      /* Status message */
+      .status-message {
+        white-space: normal;
+        text-align: center;
+      }
+    }
+
+    /* ============================================
+       HORIZONTAL LAYOUT (landscape / wide)
+       ============================================ */
+    @media (min-aspect-ratio: 1/1) and (min-width: 601px) {
+      .controls-container {
+        flex-direction: row;
+        flex-wrap: nowrap;
+      }
+
+      /* Hide the top-row wrapper in horizontal - elements display inline */
+      .top-row {
+        display: contents;
+      }
+    }
+
+    /* ============================================
+       COMPACT HORIZONTAL (short height)
+       ============================================ */
+    @media (max-height: 120px) {
+      .controls-container {
+        padding: 8px 15px;
+        gap: 10px;
+      }
+
+      .balance-display {
+        padding: 8px 12px;
+      }
+
+      .balance-label {
+        font-size: 0.7rem;
+        margin-bottom: 2px;
+      }
+
+      .balance-amount {
+        font-size: 1.1rem;
+      }
+
+      .bet-controls {
+        padding: 8px 12px;
+        gap: 10px;
+      }
+
+      .bet-input {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+      }
+
+      .quick-bet-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+      }
+
+      .btn {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+      }
+
+      .round-status {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+      }
+
+      .input-label {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* ============================================
+       EXTRA COMPACT (very short height)
+       ============================================ */
+    @media (max-height: 80px) {
+      .controls-container {
+        padding: 5px 10px;
+        gap: 8px;
+      }
+
+      .balance-display {
+        padding: 5px 10px;
+      }
+
+      .balance-label {
+        display: none;
+      }
+
+      .balance-amount {
+        font-size: 1rem;
+      }
+
+      .input-label {
+        display: none;
+      }
+
+      .bet-controls {
+        padding: 5px 10px;
+      }
+
+      .bet-input {
+        width: 80px;
+        padding: 5px 8px;
+      }
+
+      .quick-bets {
+        gap: 4px;
+      }
+
+      .quick-bet-btn {
+        padding: 4px 6px;
+        font-size: 0.7rem;
+      }
+
+      .btn {
+        padding: 6px 15px;
+        font-size: 0.85rem;
+      }
+
+      .round-status {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="connection-indicator disconnected" id="connectionIndicator">DISCONNECTED</div>
 
   <div class="controls-container">
-    <!-- Balance display -->
-    <div class="balance-display">
-      <div class="balance-label">Balance</div>
-      <div class="balance-amount" id="balance">0.00 EUR</div>
+    <!-- Top row: Round status + Balance (side by side in vertical, inline in horizontal) -->
+    <div class="top-row">
+      <!-- Round status -->
+      <div class="round-status" id="roundStatus">Connecting...</div>
+
+      <!-- Balance display -->
+      <div class="balance-display">
+        <div class="balance-label">Balance</div>
+        <div class="balance-amount" id="balance">0.00 EUR</div>
+      </div>
     </div>
 
     <!-- Bet controls -->
     <div class="bet-controls">
-      <!-- Round status -->
-      <div class="round-status" id="roundStatus">Connecting...</div>
-
-      <!-- Current bet info -->
-      <div class="current-bet-info" id="currentBetInfo">
-        <div class="label">Your Bet</div>
-        <div class="value" id="currentBetAmount">0.00</div>
-        <div class="cashout-amount" id="potentialWin">Potential: 0.00</div>
-      </div>
-
       <!-- Bet amount input -->
       <div class="input-group">
         <label class="input-label">Bet Amount</label>
@@ -313,15 +555,22 @@
         <button class="quick-bet-btn" data-amount="max">MAX</button>
       </div>
 
-      <!-- Action buttons -->
-      <div class="action-buttons">
-        <button class="btn btn-bet" id="betBtn">Place Bet</button>
-        <button class="btn btn-cashout" id="cashoutBtn">Cashout</button>
+      <!-- Current bet info -->
+      <div class="current-bet-info" id="currentBetInfo">
+        <div class="label">Your Bet</div>
+        <div class="value" id="currentBetAmount">0.00</div>
+        <div class="cashout-amount" id="potentialWin">Potential: 0.00</div>
       </div>
-
-      <!-- Status message -->
-      <div class="status-message" id="statusMessage" style="display: none;"></div>
     </div>
+
+    <!-- Action buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-bet" id="betBtn">Place Bet</button>
+      <button class="btn btn-cashout" id="cashoutBtn">Cashout</button>
+    </div>
+
+    <!-- Status message -->
+    <div class="status-message" id="statusMessage" style="display: none;"></div>
   </div>
 
   <script src="/crash/socket.io/socket.io.js"></script>
