@@ -1,5 +1,6 @@
 const sessionService = require('../services/sessionService');
 const roundService = require('../services/roundService');
+const config = require('../config');
 
 /**
  * Game Namespace WebSocket Handler
@@ -77,7 +78,8 @@ function sendCurrentState(socket) {
         roundId: round.id,
         serverSeedHash: round.serverSeedHash,
         clientSeed: round.clientSeed,
-        nonce: round.nonce
+        nonce: round.nonce,
+        duration: config.GAME.BETTING_PHASE_MS
       });
       break;
 

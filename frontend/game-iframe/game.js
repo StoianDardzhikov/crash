@@ -156,7 +156,7 @@ class CrashGame {
     this.statusTextEl.textContent = 'Place your bets!';
 
     // Start countdown using duration from server (converted from ms to seconds)
-    const countdownSeconds = Math.ceil(data.duration / 1000);
+    const countdownSeconds = data.duration ? Math.ceil(data.duration / 1000) : 20;
     this.startCountdown(countdownSeconds);
 
     // Reset graph and effects
