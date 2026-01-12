@@ -155,8 +155,9 @@ class CrashGame {
     this.multiplierEl.className = 'multiplier betting';
     this.statusTextEl.textContent = 'Place your bets!';
 
-    // Start countdown (5 seconds)
-    this.startCountdown(5);
+    // Start countdown using duration from server (converted from ms to seconds)
+    const countdownSeconds = Math.ceil(data.duration / 1000);
+    this.startCountdown(countdownSeconds);
 
     // Reset graph and effects
     this.graphPoints = [];
