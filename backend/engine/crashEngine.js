@@ -105,6 +105,7 @@ class CrashEngine {
     }
 
     this.currentRound.status = 'betting';
+    this.currentRound.bettingPhaseStartTime = Date.now();
     console.log(`[CrashEngine] Betting phase started for round ${this.currentRound.id}`);
 
     this.emit('betting_phase', {
@@ -328,7 +329,8 @@ class CrashEngine {
       clientSeed: this.currentRound.clientSeed,
       nonce: this.currentRound.nonce,
       betsCount: this.currentRound.bets.size,
-      startTime: this.currentRound.startTime
+      startTime: this.currentRound.startTime,
+      bettingPhaseStartTime: this.currentRound.bettingPhaseStartTime
     };
   }
 

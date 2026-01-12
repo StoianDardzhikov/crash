@@ -74,12 +74,14 @@ function sendCurrentState(socket) {
 
   switch (round.status) {
     case 'betting':
+      const elapsed = Date.now() - round.bettingPhaseStartTime;
+      const remaining = Math.max(0, config.GAME.BETTING_PHASE_MS - elapsed);
       socket.emit('betting_phase', {
         roundId: round.id,
         serverSeedHash: round.serverSeedHash,
         clientSeed: round.clientSeed,
         nonce: round.nonce,
-        duration: config.GAME.BETTING_PHASE_MS
+        duration: remaining
       });
       break;
 
